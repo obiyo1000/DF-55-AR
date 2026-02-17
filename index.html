@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dymind DF-55 AR Experience</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: sans-serif; }
+        
+        /* สไตล์หน้าจอเริ่มงาน (Splash Screen) */
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+            display: flex; flex-direction: column; justify-content: center;
+            align-items: center; z-index: 100; color: white; transition: 0.5s;
+        }
+        
+        #start-btn {
+            padding: 16px 40px; font-size: 20px; font-weight: bold;
+            background: #00e676; color: black; border: none; border-radius: 50px;
+            cursor: pointer; box-shadow: 0 0 20px rgba(0,230,118,0.5);
+        }
+
+        /* สไตล์ตัวเล่นโมเดล */
+        model-viewer {
+            width: 100%; height: 100%; background-color: #ffffff;
+        }
+
+        /* ปุ่ม AR แบบปรับแต่งเอง */
+        #ar-button {
+            background-color: white; border-radius: 8px; border: 1px solid #ccc;
+            padding: 10px 20px; position: absolute; bottom: 50px; left: 50%;
+            transform: translateX(-50%); font-weight: bold; display: flex; align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="splash-screen">
+        <h1 style="margin-bottom: 10px;">DYMIND</h1>
+        <p style="margin-bottom: 30px; color: #ccc;">DF-55 Hematology Analyzer AR</p>
+        <button id="start-btn">เริ่มสัมผัสประสบการณ์ 3D</button>
+    </div>
+
+    <audio id="narration" src="./sound.mp3" preload="auto" playsinline></audio>
+
+    <model-viewer 
+        id="viewer"
+        src="./model.glb" 
+        ios-src="./model.usdz"
+        ar 
+        ar-modes="webxr scene-viewer quick-look" 
+        camera-controls 
+        auto-rotate 
+        shadow-intensity="1" 
+        ar-scale="fixed"
+        touch-action="pan-y">
+        
+        <button slot="ar-button" id="ar-button">
+            🔘 วางเครื่องในพื้นที่จริง (ขนาดจริง)
+        </button>
+
+    </model-viewer>
+
+    <script>
+        const splash = document.getElementById('splash-screen');
+        const startBtn = document.getElementById('start-btn');
+        const audio = document.getElementById('narration');
+        const viewer = document.getElementById('viewer');
+
+        startBtn.onclick = () => {
+            splash.style.opacity = '0';
+            setTimeout(() => splash.style.display = 'none', 500);
+            
+            // เล่นเสียงทันทีที่กดเข้าหน้าเว็บ
+            audio.play();
+        };
+
+        // เมื่อผู้ใช้กดปุ่ม AR (เริ่มสแกนพื้น)
+        viewer.addEventListener('ar-status', (event) => {
+            if (event.detail.status === 'session-started') {
+                // ถ้าอยากให้เสียงเริ่มใหม่ตอนเข้าโหมด AR ให้ใช้บรรทัดล่างนี้
+                audio.currentTime = 0;
+                audio.play();
+            }
+        });
+    </script>
+</body>
+</html>
