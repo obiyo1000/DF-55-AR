@@ -46,27 +46,50 @@
 
     <audio id="narration" src="./sound.mp3" preload="auto" playsinline></audio>
 
-    <model-viewer 
-        id="viewer"
-        src="./model.glb" 
-        ios-src="./model.usdz"
-        ar 
-        ar-modes="webxr scene-viewer quick-look" 
-        ar-scale="fixed"
-        ar-placement="floor"
-        camera-controls 
-        interaction-prompt="none" 
-        shadow-intensity="1" 
-        exposure="1"
-        min-camera-orbit="auto auto auto" 
-        max-camera-orbit="auto auto auto">
-        
-        <button slot="ar-button" id="ar-button">
-            🔘 วางเครื่องในพื้นที่จริง (ขนาดจริง)
-        </button>
+   <model-viewer 
+    id="viewer"
+    src="./model.glb" 
+    ios-src="./model.usdz"
+    ar 
+    ar-modes="webxr scene-viewer quick-look" 
+    ar-scale="fixed"
+    ar-placement="floor"
+    camera-controls 
+    touch-action="none"
+    interaction-prompt="crosshair" 
+    shadow-intensity="1" 
+    exposure="1">
+    
+    <button slot="ar-button" id="ar-button">
+        🔘 วางเครื่องในพื้นที่จริง (ขนาดจริง)
+    </button>
 
-    </model-viewer>
+    <div id="ar-prompt">
+        <img src="https://modelviewer.dev/shared-assets/icons/hand.png">
+    </div>
+</model-viewer>
 
+<style>
+    /* สไตล์สำหรับตัวนำทางตอนสแกนพื้น */
+    #ar-prompt {
+        position: absolute;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: none;
+    }
+    #viewer[ar-status="session-started"] > #ar-prompt {
+        display: block;
+    }
+    #ar-prompt img {
+        width: 60px;
+        animation: circle 2s linear infinite;
+    }
+    @keyframes circle {
+        from { transform: rotate(0deg) translateX(20px) rotate(0deg); }
+        to { transform: rotate(360deg) translateX(20px) rotate(-360deg); }
+    }
+</style>
     <script>
         const splash = document.getElementById('splash-screen');
         const startBtn = document.getElementById('start-btn');
@@ -93,4 +116,5 @@
 </body>
 
 </html>
+
 
